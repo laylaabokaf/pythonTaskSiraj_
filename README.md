@@ -1,17 +1,17 @@
 
 # Task Queueing Application
 
-The Task Queueing Application is a Python program designed to manage and execute tasks in a queue. It provides a way to add tasks to a queue, process them one at a time, and log their execution times to a file. This README document explains the design decisions made for the application.
+The Task Queueing Application is a Python program designed to manage and execute tasks in a queue. It provides a way to add tasks to a queue, process them one at a time, and log their execution times to a file. 
 
 ## Design Decisions
 
 ### Choice of Task Entering
 
-The application allows tasks to be entered into the queue by watching a designated folder for task files. Whenever a new `.py` file is added to the folder, it is considered a new task and is added to the queue for processing. This choice was made to provide a simple way to add tasks without requiring direct interaction with the program. Adding tasks via files makes it easy to integrate with other systems and automation tools.
+The application allows tasks to be entered into the queue by watching a designated folder for task files. Whenever a new `.py` file is added to the folder, it is considered a new task and is added to the queue for processing.
 
 ### Configuration File (config.ini)
 
-The application utilizes a configuration file named `configfile.ini` to specify various settings. This approach allows for easy customization without modifying the code directly. The configuration file is organized into sections, with each section containing specific parameters. This design choice enables users to adjust parameters such as the maximum queue length, the log file name, and the tasks folder.
+The application utilizes a configuration file named `configfile.ini` to specify various settings.  This design choice enables users to adjust parameters such as the maximum queue length, the log file name, and the tasks folder.
 
 ### General Design of the Code
 
