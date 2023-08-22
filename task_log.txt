@@ -1,5 +1,6 @@
-Task 'task1' Completed: Started at 0.0, Ended at 0.31379270553588867
-Task 'task2' Completed: Started at 0.31379270553588867, Ended at 0.6909103393554688
-Task 'task3' Completed: Started at 0.6909103393554688, Ended at 10.957481384277344
-Task 'task4' Completed: Started at 10.957481384277344, Ended at 11.11452841758728
-Task 'task5' Completed: Started at 11.11452841758728, Ended at 11.271292209625244
+Task 'task1' Completed: Started at 0.015653133392333984, Ended at 0.12602019309997559
+Task 'task2' Completed: Started at 0.12602019309997559, Ended at 0.25150489807128906
+Task 'task3' Completed: Started at 0.25150489807128906, Ended at 10.373118877410889
+Task 'task4' Completed: Started at 10.373118877410889, Ended at 10.49851393699646
+Task 'task5' Completed: Started at 10.49851393699646, Ended at 10.608298063278198
+Task 'task6' Completed: Started at 10.608298063278198, Ended at 10.750377416610718
