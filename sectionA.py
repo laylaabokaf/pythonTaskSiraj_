@@ -3,36 +3,44 @@ import threading
 import time
 import os
 import subprocess
+import configparser
+from TaskQueueApplication import TaskQueueApplicationClass
 
-# Define the maximum length of the queue
-MAX_QUEUE_LENGTH = 10
+# Read configuration from config.ini file
+config_obj = configparser.ConfigParser()
+config_obj.read("configfile.ini")
+param = config_obj["sectionA"]
 
-# Define the folder where task files are located
-tasks_folder = 'tasks_files'
+# Extract configuration parameters
+MAX_QUEUE_LENGTH = int(param["max_queue_length"])
+log_task_file_name = param["log_task_file_name"]
+tasks_folder = param["tasks_folder"]
 
-# Keep track of executed task names
-executed_task_names = []
+# Create a threading event to potentially stop the running threads
+stop_app = threading.Event()
 
-# Record the start time of the program
-program_start_time = time.time()
+# Initialize the TaskQueueApplicationClass with configuration parameters
+app = TaskQueueApplicationClass(
+    tasks_folder=tasks_folder,
+    queue_length=MAX_QUEUE_LENGTH,
+    log_file=log_task_file_name,
+    event=stop_app
+)
 
-# Clear log file before writing
-open('task_log.txt', 'w').close()
-
-
-app = TaskQueueApplication(tasks_folder='tasks_folder',queue_length=MAX_QUEUE_LENGTH)
+# Clear the log file before starting
+app.clear_log_file()
 
 # Start the task processing thread
 task_thread = threading.Thread(target=app.process_tasks)
 task_thread.daemon = True
-task_thread.start()
 
 # Start the folder watching thread
 watch_folder_thread = threading.Thread(target=app.watch_folder)
+watch_folder_thread.daemon = True
+
+# Start both threads
+task_thread.start()
 watch_folder_thread.start()
 
-# Wait for the tasks to complete
-app.task_queue.join()
-
-# Print a message when all tasks are completed
-print("All tasks completed")
+# Wait for the watch_folder thread to terminate
+watch_folder_thread.join()
