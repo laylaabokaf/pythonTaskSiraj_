@@ -83,6 +83,18 @@ class TestTaskQueueApplication(unittest.TestCase):
         self.assertIn("Task 'task1' Completed: Started at 0.5, Ended at 2.5", log_contents)
         self.assertIn("Task 'task2' Completed: Started at 1.5, Ended at 3.5", log_contents)
 
+    def test_clear_log_file(self):
+        # Ensure that the log file is cleared when clear_log_file() is called
+        with open(self.log_file, 'w') as log_file:
+            log_file.write("Existing log content")
+
+        self.app.clear_log_file()
+
+        with open(self.log_file, 'r') as log_file:
+            log_contents = log_file.read()
+
+        self.assertEqual(log_contents, "")  # Log file should be empty
+
     def test_failed_task(self):
         failed_content = """
 def thisIsAFailer():
