@@ -2,6 +2,7 @@ import unittest
 import os
 import threading
 import time
+from io import StringIO
 from unittest.mock import patch
 from TaskQueueApplication import TaskQueueApplicationClass
 
@@ -68,6 +69,7 @@ class TestTaskQueueApplication(unittest.TestCase):
             self.assertTrue(task_found)
 
             # Stop the watch_thread
+           # os.remove(task_file_path)
             self.stop_app.set()
 
             # Clean up: Remove the task file
@@ -138,6 +140,41 @@ thisIsAFailer()
         # Clean up: Remove the task file
         os.remove(failed_file_path)
         open(self.log_file, 'w').close()
+
+    @unittest.skip('this test need to be fixed , captured_output not getting the printed output ')
+    def test_watch_folder_executes_all_files(self):
+        # Create mock task files
+        mock_tasks = ['task1.py', 'task2.py', 'task3.py']
+
+        for task_file in mock_tasks:
+            task_file_path = os.path.join(self.tasks_folder, task_file)
+            with open(task_file_path, 'w') as f:
+                f.write(f'print("{task_file} executed")')
+                f.flush()
+
+        watch_folder_thread = threading.Thread(target=self.app.watch_folder)
+        process_tasks_thread = threading.Thread(target=self.app.process_tasks)
+        watch_folder_thread.daemon = True
+        process_tasks_thread.daemon = True
+
+
+        # Capture printed output
+        captured_output = StringIO()
+        with patch('sys.stdout', new=captured_output):
+            watch_folder_thread.start()
+            process_tasks_thread.start()
+            time.sleep(3)
+            self.stop_app.set()  # Set event to stop threads
+            watch_folder_thread.join()
+
+        captured_output.seek(0)
+        output_lines = captured_output.readlines()
+
+        # Check that all tasks were executed
+        for task_file in mock_tasks:
+            expected_output = f'{task_file} executed'
+            self.assertIn(expected_output, output_lines)
+
 
 if __name__ == '__main__':
     unittest.main()
