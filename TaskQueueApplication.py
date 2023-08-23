@@ -28,6 +28,7 @@ class TaskQueueApplicationClass:
             print(f"Task {task_id} failed")
             self.log_task_times(task_id, 0, -1)
 
+
     def add_task(self, task_id):
         self.task_queue.put(task_id)
 
