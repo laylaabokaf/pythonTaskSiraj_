@@ -1,9 +1,10 @@
 import unittest
 import os
+import sys
 import threading
 import time
 from io import StringIO
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from TaskQueueApplication import TaskQueueApplicationClass
 
 class TestTaskQueueApplication(unittest.TestCase):
@@ -15,7 +16,8 @@ class TestTaskQueueApplication(unittest.TestCase):
             tasks_folder=self.tasks_folder,
             queue_length=20,
             log_file=self.log_file,
-            event=self.stop_app
+            event=self.stop_app,
+            debugMode = True
         )
 
     def tearDown(self):
@@ -141,7 +143,6 @@ thisIsAFailer()
         os.remove(failed_file_path)
         open(self.log_file, 'w').close()
 
-    @unittest.skip('this test need to be fixed , captured_output not getting the printed output ')
     def test_watch_folder_executes_all_files(self):
         # Create mock task files
         mock_tasks = ['task1.py', 'task2.py', 'task3.py']
@@ -157,24 +158,24 @@ thisIsAFailer()
         watch_folder_thread.daemon = True
         process_tasks_thread.daemon = True
 
-
+        print("before captured_output")
         # Capture printed output
         captured_output = StringIO()
+        watch_folder_thread.start()
         with patch('sys.stdout', new=captured_output):
-            watch_folder_thread.start()
             process_tasks_thread.start()
             time.sleep(3)
             self.stop_app.set()  # Set event to stop threads
             watch_folder_thread.join()
-
+            v =captured_output.getvalue()
+        print(v)
         captured_output.seek(0)
         output_lines = captured_output.readlines()
 
         # Check that all tasks were executed
         for task_file in mock_tasks:
-            expected_output = f'{task_file} executed'
+            expected_output = f'{task_file} executed\r\n'
             self.assertIn(expected_output, output_lines)
-
 
 if __name__ == '__main__':
     unittest.main()

@@ -7,26 +7,29 @@ import unittest
 from threading import Event
 
 class TaskQueueApplicationClass:
-    def __init__(self, tasks_folder, queue_length, log_file, event):
+    def __init__(self, tasks_folder, queue_length, log_file, event , debugMode = False):
         self.tasks_folder = tasks_folder
         self.executed_task_names = []
         self.program_start_time = time.time()
         self.task_queue = queue.Queue(queue_length)
         self.stop_app = event
         self.log_file = log_file
+        self.debugMode = debugMode
 
     def task_function(self, task_id):
         script_path = f'{self.tasks_folder}/{task_id}.py'
-        print(f"Task {task_id} started")
+        #print(f"Task {task_id} started")
         start_time = time.time() - self.program_start_time
         try:
-            subprocess.run(['python', script_path], check=True)
+            output  = subprocess.run(['python', script_path], check=True, capture_output=True )
             end_time = time.time() - self.program_start_time
-            print(f"Task {task_id} completed")
             self.log_task_times(task_id, start_time, end_time)
+            if self.debugMode :
+                print(output.stdout.decode("utf-8"))
+            #return output
         except subprocess.CalledProcessError:
-            print(f"Task {task_id} failed")
             self.log_task_times(task_id, 0, -1)
+            #return output
 
 
     def add_task(self, task_id):
@@ -41,7 +44,7 @@ class TaskQueueApplicationClass:
                 break
 
     def watch_folder(self):
-        print(f"Running tasks runner thread with args: {self.tasks_folder}")
+        #print(f"Running tasks runner thread with args: {self.tasks_folder}")
         while True:
             for filename in os.listdir(self.tasks_folder):
                 if filename.endswith('.py'):
@@ -49,7 +52,7 @@ class TaskQueueApplicationClass:
                     if task_id not in self.executed_task_names:
                         self.executed_task_names.append(task_id)
                         self.add_task(task_id)
-                        print(f"Task {task_id} added to the queue from tasks_files folder")
+                        #print(f"Task {task_id} added to the queue from tasks_files folder")
             if self.stop_app.is_set():
                 break
 
