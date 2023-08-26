@@ -10,3 +10,16 @@ Task 'task6' Completed: Started at 4.0975494384765625, Ended at 7.27047896385192
 Task 'task7' Completed: Started at 7.270478963851929, Ended at 8.407881259918213
 Task 'task8' Completed: Started at 8.407881259918213, Ended at 8.563259840011597
 Task 'task9' Completed: Started at 8.563259840011597, Ended at 8.688968658447266
+Thread 8708: Task 'task10' Completed: Started at 0.031250715255737305, Ended at 0.2499997615814209
+Thread 10952: Task 'task1' Completed: Started at 0.031250715255737305, Ended at 0.2656266689300537
+Thread 13780: Task 'task11' Completed: Started at 0.031250715255737305, Ended at 0.2812626361846924
+Thread 10952: Task 'task2' Completed: Started at 0.2656266689300537, Ended at 0.437502384185791
+Thread 8708: Task 'task12' Completed: Started at 0.2656266689300537, Ended at 0.46875429153442383
+Thread 10952: Task 'task4' Completed: Started at 0.437502384185791, Ended at 0.6406280994415283
+Thread 8708: Task 'task5' Completed: Started at 0.46875429153442383, Ended at 0.6718776226043701
+Thread 8708: Task 'task7' Completed: Started at 0.6718776226043701, Ended at 1.7968740463256836
+Thread 8708: Task 'task8' Completed: Started at 1.7968740463256836, Ended at 1.9062483310699463
+Thread 8708: Task 'task9' Completed: Started at 1.9062483310699463, Ended at 2.03125
+Thread 13780: Task 'task3' Completed: Started at 0.2812626361846924, Ended at 3.4218733310699463
+Thread 10952: Task 'task6' Completed: Started at 0.6406280994415283, Ended at 3.7812857627868652
+Thread 8708: Task 'task13' Completed: Started at 145.39525389671326, Ended at 145.52025890350342
