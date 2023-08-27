@@ -29,10 +29,12 @@ app = TaskQueueApplicationMultiThreadingClass(
     log_file=log_file,
     event=stop_app
 )
-
+app.clear_log_file()
 try:
     # Run the application
-    app.run()
+    [task_thread,watch_folder_thread] = app.run()
+    watch_folder_thread.join()
+    task_queue.join()
 except KeyboardInterrupt:
     print("Stopping the application...")
     stop_app.set()  # Set event to stop the application
