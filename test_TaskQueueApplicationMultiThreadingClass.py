@@ -15,6 +15,11 @@ class TestTaskQueueApplicationMultiThreadingClass(unittest.TestCase):
         self.queue_length = 10
         self.max_concurrent_tasks = 3
         self.log_file = 'test_log_file.txt'
+        # Check if the log file exists
+        if not os.path.exists(self.log_file):
+            # Create an empty log file if it doesn't exist
+            with open(self.log_file, 'w') as log_file:
+                pass
         self.stop_app = threading.Event()
         self.app = TaskQueueApplicationMultiThreadingClass(
             tasks_folder=self.tasks_folder,
@@ -35,6 +40,8 @@ class TestTaskQueueApplicationMultiThreadingClass(unittest.TestCase):
             if filename.endswith('.py'):
                os.remove(os.path.join(self.tasks_folder, filename))
         os.rmdir(self.tasks_folder)
+        if os.path.exists(self.log_file):
+            os.remove(self.log_file)
     #basic test,task1 added to the queue
     def test_add_task(self):
         self.app.add_task('task1')

@@ -10,7 +10,13 @@ from TaskQueueApplication import TaskQueueApplicationClass
 class TestTaskQueueApplication(unittest.TestCase):
     def setUp(self):
         self.tasks_folder = 'test_tasks_folder'
+        os.makedirs(self.tasks_folder, exist_ok=True)
         self.log_file = 'test_log_file.txt'
+         # Check if the log file exists
+        if not os.path.exists(self.log_file):
+            # Create an empty log file if it doesn't exist
+            with open(self.log_file, 'w') as log_file:
+                pass
         self.stop_app = threading.Event()
         self.app = TaskQueueApplicationClass(
             tasks_folder=self.tasks_folder,
@@ -25,6 +31,10 @@ class TestTaskQueueApplication(unittest.TestCase):
         time.sleep(1)  # Allow threads to stop
         if os.path.exists(self.log_file):
             os.remove(self.log_file)
+        for filename in os.listdir(self.tasks_folder):
+            if filename.endswith('.py'):
+               os.remove(os.path.join(self.tasks_folder, filename))
+        os.rmdir(self.tasks_folder)
 
     def test_add_task(self):
         self.app.add_task('task1')

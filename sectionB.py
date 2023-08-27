@@ -5,7 +5,8 @@ import os
 import subprocess
 import configparser
 from TaskQueueApplicationMultiThreading import TaskQueueApplicationMultiThreadingClass
-
+import signal
+import sys
 
 # Read configuration from config.ini file
 config_obj = configparser.ConfigParser()
@@ -30,11 +31,15 @@ app = TaskQueueApplicationMultiThreadingClass(
     event=stop_app
 )
 app.clear_log_file()
-try:
-    # Run the application
-    [task_thread,watch_folder_thread] = app.run()
-    watch_folder_thread.join()
-    task_queue.join()
-except KeyboardInterrupt:
-    print("Stopping the application...")
-    stop_app.set()  # Set event to stop the application
+
+def handler(signal_received, frame):
+    stop_app.set()
+    print('SIGINT or CTRL-C detected. Exiting gracefully')
+    exit(0)
+
+signal.signal(signal.SIGINT, handler)
+
+app.run()
+
+while True:
+    time.sleep(3)

@@ -5,6 +5,8 @@ import os
 import subprocess
 import configparser
 from TaskQueueApplication import TaskQueueApplicationClass
+import signal
+import sys
 
 # Read configuration from config.ini file
 config_obj = configparser.ConfigParser()
@@ -30,6 +32,12 @@ app = TaskQueueApplicationClass(
 # Clear the log file before starting
 app.clear_log_file()
 
+def handler(signal_received, frame):
+    stop_app.set()
+    print('SIGINT or CTRL-C detected. Exiting gracefully')
+    exit(0)
+
+signal.signal(signal.SIGINT, handler)
 # Start the task processing thread
 task_thread = threading.Thread(target=app.process_tasks)
 task_thread.daemon = True
@@ -43,4 +51,6 @@ task_thread.start()
 watch_folder_thread.start()
 
 # Wait for the watch_folder thread to terminate
-watch_folder_thread.join()
+#watch_folder_thread.join()
+while True:
+     time.sleep(2)
