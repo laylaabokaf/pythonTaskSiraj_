@@ -42,6 +42,7 @@ class TestTaskQueueApplicationMultiThreadingClass(unittest.TestCase):
         os.rmdir(self.tasks_folder)
         if os.path.exists(self.log_file):
             os.remove(self.log_file)
+
     #basic test,task1 added to the queue
     def test_add_task(self):
         self.app.add_task('task1')
@@ -55,9 +56,11 @@ class TestTaskQueueApplicationMultiThreadingClass(unittest.TestCase):
 
             # Simulate the creation of task files in the test folder
             task_file_path = os.path.join(self.tasks_folder, 'task_file.py')
-            open(task_file_path, 'w').close()
-
-            time.sleep(3)  # Wait a bit for the watch thread to process the file
+            with open(task_file_path, 'w') as f:
+                f.write("#test me ")
+                f.flush()
+            time.sleep(5)  # Wait a bit for the watch thread to process the file
+            
 
             # Check if the task was added to the queue
             task_found = False
@@ -77,9 +80,9 @@ class TestTaskQueueApplicationMultiThreadingClass(unittest.TestCase):
 
     def test_process_tasks(self):
         # Mock task_function to avoid subprocess calls during testing
-        def mock_task_function(task_id):
-            pass
-        self.app.task_function = mock_task_function
+        #def mock_task_function(task_id):
+        #    pass
+        #self.app.task_function = mock_task_function
 
         self.app.add_task('task1')
         self.app.add_task('task2')
@@ -93,7 +96,7 @@ class TestTaskQueueApplicationMultiThreadingClass(unittest.TestCase):
 
         time.sleep(5)
         self.assertEqual(self.app.task_queue.qsize(), 0)
-
+        
 
 
     def test_log_task_times(self):

@@ -23,9 +23,7 @@ class TaskQueueApplicationMultiThreadingClass:
         start_time = time.time() - self.program_start_time
         try:
             output =  subprocess.run(['python', script_path], check=True, capture_output=True)
-
-            if self.debugMode :
-                print(output.stdout.decode("utf-8"))
+            print(output.stdout.decode("utf-8"))
             end_time = time.time() - self.program_start_time
             thread_id = threading.get_ident()  # Get the current thread ID
             self.log_task_times(task_id, start_time, end_time, thread_id)

@@ -3,7 +3,6 @@ import threading
 import time
 import os
 import subprocess
-import unittest
 from threading import Event
 
 class TaskQueueApplicationClass:
@@ -24,9 +23,8 @@ class TaskQueueApplicationClass:
             output  = subprocess.run(['python', script_path], check=True, capture_output=True )
             end_time = time.time() - self.program_start_time
             self.log_task_times(task_id, start_time, end_time)
-            if self.debugMode :
-                print(output.stdout.decode("utf-8"))
-            #return output
+            print(output.stdout.decode("utf-8"))
+            
         except subprocess.CalledProcessError:
             self.log_task_times(task_id, 0, -1)
             #return output

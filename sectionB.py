@@ -1,12 +1,9 @@
 import queue
 import threading
 import time
-import os
-import subprocess
 import configparser
 from TaskQueueApplicationMultiThreading import TaskQueueApplicationMultiThreadingClass
 import signal
-import sys
 
 # Read configuration from config.ini file
 config_obj = configparser.ConfigParser()
@@ -32,6 +29,7 @@ app = TaskQueueApplicationMultiThreadingClass(
 )
 app.clear_log_file()
 
+# Set up the signal handler for the SIGINT signal (CTRL-C)
 def handler(signal_received, frame):
     stop_app.set()
     print('SIGINT or CTRL-C detected. Exiting gracefully')
@@ -39,7 +37,9 @@ def handler(signal_received, frame):
 
 signal.signal(signal.SIGINT, handler)
 
+#Run the application
 app.run()
 
+#Wait for CTRL-C signal to stop
 while True:
     time.sleep(3)

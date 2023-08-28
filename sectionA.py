@@ -1,12 +1,10 @@
 import queue
 import threading
 import time
-import os
-import subprocess
 import configparser
 from TaskQueueApplication import TaskQueueApplicationClass
 import signal
-import sys
+
 
 # Read configuration from config.ini file
 config_obj = configparser.ConfigParser()
@@ -32,6 +30,7 @@ app = TaskQueueApplicationClass(
 # Clear the log file before starting
 app.clear_log_file()
 
+# Set up the signal handler for the SIGINT signal (CTRL-C)
 def handler(signal_received, frame):
     stop_app.set()
     print('SIGINT or CTRL-C detected. Exiting gracefully')
@@ -50,7 +49,6 @@ watch_folder_thread.daemon = True
 task_thread.start()
 watch_folder_thread.start()
 
-# Wait for the watch_folder thread to terminate
-#watch_folder_thread.join()
+# Wait for CTRL -C signal
 while True:
      time.sleep(2)

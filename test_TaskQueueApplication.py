@@ -41,11 +41,6 @@ class TestTaskQueueApplication(unittest.TestCase):
         self.assertEqual(self.app.task_queue.qsize(), 1)
 
     def test_process_tasks(self):
-        # Mock task_function to avoid subprocess calls during testing
-        def mock_task_function(task_id):
-            pass
-        self.app.task_function = mock_task_function
-
         self.app.add_task('task1')
         self.app.add_task('task2')
 
@@ -67,7 +62,12 @@ class TestTaskQueueApplication(unittest.TestCase):
 
             # Simulate the creation of task files in the test folder
             task_file_path = os.path.join(self.tasks_folder, 'task_file.py')
-            open(task_file_path, 'w').close()
+            with open(task_file_path, 'w') as f:
+                f.write("#test me ")
+                f.flush()
+            time.sleep(5)  # Wait a bit for the watch thread to process the file
+            
+
 
             time.sleep(3)  # Wait a bit for the watch thread to process the file
 
@@ -81,7 +81,6 @@ class TestTaskQueueApplication(unittest.TestCase):
             self.assertTrue(task_found)
 
             # Stop the watch_thread
-           # os.remove(task_file_path)
             self.stop_app.set()
 
             # Clean up: Remove the task file
